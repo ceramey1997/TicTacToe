@@ -3,4 +3,4 @@ project(tic_tac_toe)
 
 set(CMAKE_CXX_STANDARD 11)
 
-add_executable(tic_tac_toe main.cpp main.cpp Computer.cpp)
+add_executable(tic_tac_toe main.cpp main.cpp)

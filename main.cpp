@@ -12,19 +12,38 @@ using namespace std;
 
 char matrix[3][3] = {'1', '2', '3', '4', '5', '6', '7', '8', '9'};
 
-std::vector<char> win1 = {'1', '2', '3'};
-std::vector<char> win2 = {'1', '5', '9'};
-std::vector<char> win3 = {'1', '4', '7'};
-std::vector<char> win4 = {'2', '5', '8'};
-std::vector<char> win5 = {'3', '6', '9'};
-std::vector<char> win6 = {'3', '5', '7'};
-std::vector<char> win7 = {'4', '5', '6'};
-std::vector<char> win8 = {'7', '8', '9'};
+std::vector<vector<char> > WinOptions()
+{
+    std::vector<char> win1 = {'1', '2', '3'};
+    std::vector<char> win2 = {'1', '5', '9'};
+    std::vector<char> win3 = {'1', '4', '7'};
+    std::vector<char> win4 = {'2', '5', '8'};
+    std::vector<char> win5 = {'3', '6', '9'};
+    std::vector<char> win6 = {'3', '5', '7'};
+    std::vector<char> win7 = {'4', '5', '6'};
+    std::vector<char> win8 = {'7', '8', '9'};
 
-std::vector<std::vector<char>> win_option = {win1, win2, win3, win4, win5, win6, win7, win8};
+    std::vector<std::vector<char> > win_option = {win1, win2, win3, win4, win5, win6, win7, win8};
+    return win_option;
+}
 
+std::vector<vector<char> > MatrixChanged()
+{
+    std::vector<char> win1 = {matrix[0][0], matrix[0][1], matrix[0][2]};
+    std::vector<char> win2 = {matrix[0][0], matrix[1][1], matrix[2][2]};
+    std::vector<char> win3 = {matrix[0][0], matrix[1][0], matrix[2][0]};
+    std::vector<char> win4 = {matrix[0][1], matrix[1][1], matrix[2][1]};
+    std::vector<char> win5 = {matrix[0][2], matrix[1][2], matrix[2][2]};
+    std::vector<char> win6 = {matrix[0][2], matrix[1][1], matrix[2][0]};
+    std::vector<char> win7 = {matrix[1][0], matrix[1][1], matrix[1][2]};
+    std::vector<char> win8 = {matrix[2][0], matrix[2][1], matrix[2][2]};
+
+    std::vector<std::vector<char> > win_option = {win1, win2, win3, win4, win5, win6, win7, win8};
+    return win_option;
+}
 void Draw()
 {
+
     for (int i = 0; i < 3; i++)
     {
         for (int j = 0; j < 3; j++)
@@ -159,58 +178,67 @@ int GetDiff(std::vector<char> win_option, std::vector<char> taken)
 
 int NeedBlock()
 {
-
     vector<char> taken = TakenPositions();
-    int firstOption = GetDiff(win1, taken);
-    if (firstOption != 10)
+    vector<vector<char> > win_option = WinOptions();
+    for (std::vector<char> win : win_option)
     {
-        return firstOption;
+        int option = GetDiff(win, taken);
+        if (option != 10)
+        {
+            return option;
+        }
     }
-    int secondOption = GetDiff(win2, taken);
-    if (secondOption != 10)
+    return 10;
+}
+
+int WinOpertunities()
+{
+    std::vector<vector<char> > win_options = MatrixChanged();
+    char positions[9] = {'1', '2', '3', '4', '5', '6', '7', '8', '9'};
+    int wins = 0;
+    char bestPos;
+    for (char posit : positions)
     {
-        return secondOption;
+        int wins_with_pos = 0;
+        for (vector<char> win_op : win_options)
+        {
+            if (std::find(win_op.begin(), win_op.end(), posit) != win_op.end())
+            {
+                if (std::find(win_op.begin(), win_op.end(), 'x') != win_op.end())
+                {
+                    continue;
+                }
+                if (std::find(win_op.begin(), win_op.end(), 'o') != win_op.end())
+                    {
+                        wins_with_pos+=2;
+                    }
+                else
+                {
+                    wins_with_pos++;
+                }
+            }
+            if (wins_with_pos > wins)
+            {
+                wins = wins_with_pos;
+                bestPos = posit;
+            }
+        }
     }
-    int thirdOption = GetDiff(win3, taken);
-    if (thirdOption != 10)
-    {
-        return thirdOption;
-    }
-    int fourthOption = GetDiff(win4, taken);
-    if (fourthOption != 10)
-    {
-        return fourthOption;
-    }
-    int fifthOption = GetDiff(win5, taken);
-    if (fifthOption != 10)
-    {
-        return fifthOption;
-    }
-    int sixthOption = GetDiff(win6, taken);
-    if (sixthOption != 10)
-    {
-        return sixthOption;
-    }
-    int seventhOption = GetDiff(win7, taken);
-    if (seventhOption != 10)
-    {
-        return seventhOption;
-    }
-    int eighthOption = GetDiff(win8, taken);
-    if (eighthOption != 10)
-    {
-        return eighthOption;
-    }
-    else
-    {
-        return 10;
-    }
+    return bestPos;
+}
+
+void BestPosition()
+{
+
 }
 
 void ComputerTurn()
 {
     int position = NeedBlock();
-
+    if (position == 10)
+    {
+        position = WinOpertunities();
+    }
     char player = 'o';
     switch(position)
     {
