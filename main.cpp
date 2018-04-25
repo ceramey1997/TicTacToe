@@ -184,8 +184,10 @@ int NeedBlock()
     {
         int option = GetDiff(win, taken);
         if (option != 10)
-        {
-            return option;
+        { if (std::find(taken.begin(), taken.end(), 'o') != taken.end() or std::find(taken.begin(), taken.end(), 'x') != taken.end())
+            {
+                return option;
+            }
         }
     }
     return 10;
@@ -279,9 +281,18 @@ int main() {
     Draw();
     Turn('x');
     Draw();
+    ComputerTurn();
+    Draw();
     Turn('x');
     Draw();
     ComputerTurn();
     Draw();
+    Turn('x');
+    Draw();
+    ComputerTurn();
+    Draw();
+    Turn('x');
+    Draw();
+    ComputerTurn();
     return 0;
 }
