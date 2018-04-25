@@ -54,8 +54,9 @@ void Draw()
     }
 }
 
-void Turn(char player)
+void Turn()
 {
+    char player = 'x';
     char position;
     std::cout <<  "What position would you like to play?" << std::endl;
     std::cin >> position;
@@ -229,11 +230,6 @@ int WinOpertunities()
     return bestPos;
 }
 
-void BestPosition()
-{
-
-}
-
 void ComputerTurn()
 {
     int position = NeedBlock();
@@ -277,22 +273,52 @@ void ComputerTurn()
 
 }
 
+bool Won()
+{
+    std::vector<std::vector<char> > options = MatrixChanged();
+    int count_o;
+    int count_x;
+    bool won = false;
+    for (std::vector<char> game : options)
+    {
+        count_x = 0;
+        count_o = 0;
+        for (char element : game)
+        {
+            if (element == 'x')
+            {
+                count_x++;
+            }
+            if (element == 'o')
+            {
+                count_o++;
+            }
+            if (count_x == 3)
+            {
+                won = true;
+            }
+            if (count_o == 3)
+            {
+                won = true;
+            }
+        }
+    }
+    return won;
+}
+
+bool Game()
+{
+    bool playing = true;
+    while(playing)
+    {
+        Draw();
+        Turn();
+        ComputerTurn();
+        playing = Won();
+    }
+}
+
 int main() {
-    Draw();
-    Turn('x');
-    Draw();
-    ComputerTurn();
-    Draw();
-    Turn('x');
-    Draw();
-    ComputerTurn();
-    Draw();
-    Turn('x');
-    Draw();
-    ComputerTurn();
-    Draw();
-    Turn('x');
-    Draw();
-    ComputerTurn();
+    Game();
     return 0;
 }
