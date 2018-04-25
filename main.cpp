@@ -185,7 +185,7 @@ int NeedBlock()
     {
         int option = GetDiff(win, taken);
         if (option != 10)
-        { if (std::find(taken.begin(), taken.end(), 'o') != taken.end() or std::find(taken.begin(), taken.end(), 'x') != taken.end())
+        { if (std::find(taken.begin(), taken.end(), 'o') == taken.end() or std::find(taken.begin(), taken.end(), 'x') == taken.end())
             {
                 return option;
             }
@@ -278,7 +278,7 @@ bool Won()
     std::vector<std::vector<char> > options = MatrixChanged();
     int count_o;
     int count_x;
-    bool won = false;
+    bool still_playing = true;
     for (std::vector<char> game : options)
     {
         count_x = 0;
@@ -295,15 +295,15 @@ bool Won()
             }
             if (count_x == 3)
             {
-                won = true;
+                still_playing = false;
             }
             if (count_o == 3)
             {
-                won = true;
+                still_playing = false;
             }
         }
     }
-    return won;
+    return still_playing;
 }
 
 bool Game()
