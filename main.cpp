@@ -334,8 +334,9 @@ bool Won()
     return still_playing;
 }
 
-bool Game()
+void Game()
 {
+    bool draw = false;
     bool playing = true;
     while(playing)
     {
@@ -343,13 +344,18 @@ bool Game()
         Turn();
         ComputerTurn();
         playing = Won();
-        if (StillPositions() == false)
+        if (! StillPositions())
         {
+            draw = true;
             playing = false;
         }
     }
     Draw();
-    std::cout << "Game over.";
+    if (draw)
+    {
+        std::cout << "It is a Draw.  ¯\\_(ツ)_/¯ " << std::endl;
+    }
+    std::cout << "Game over." << std::endl;
 }
 
 
