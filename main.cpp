@@ -54,8 +54,9 @@ void Draw()
     }
 }
 
-void Turn(char player)
+void Turn()
 {
+    char player = 'x';
     char position;
     std::cout <<  "What position would you like to play?" << std::endl;
     std::cin >> position;
