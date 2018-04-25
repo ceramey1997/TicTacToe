@@ -147,7 +147,7 @@ char Position(int i, int j)
 }
 
 
-std::vector<char> TakenPositions()
+std::vector<char> TakenPositions(char player)
 {
     std::vector<char> taken;
     for (int i = 0; i < 3; i++)
@@ -155,7 +155,7 @@ std::vector<char> TakenPositions()
         for (int j = 0; j < 3; j++)
         {
             char position = matrix[i][j];
-            if (position == 'x')
+            if (position == player)
             {
                 char spot = Position(i, j);
                 taken.push_back(spot);
@@ -165,7 +165,7 @@ std::vector<char> TakenPositions()
     return taken;
 }
 
-int GetDiff(std::vector<char> win_option, std::vector<char> taken)
+char GetDiff(std::vector<char> win_option, std::vector<char> taken)
 {
     std::vector<char> diff;
     std::set_difference(win_option.begin(), win_option.end(), taken.begin(), taken.end(),
@@ -179,15 +179,17 @@ int GetDiff(std::vector<char> win_option, std::vector<char> taken)
 
 int NeedBlock()
 {
-    vector<char> taken = TakenPositions();
+    vector<char> taken_player = TakenPositions('x');
+    vector<char> taken_computer = TakenPositions('o');
     vector<vector<char> > win_option = WinOptions();
     for (std::vector<char> win : win_option)
     {
-        int option = GetDiff(win, taken);
+        char option = GetDiff(win, taken_player);
         if (option != 10)
-        { if (std::find(taken.begin(), taken.end(), 'o') == taken.end() or std::find(taken.begin(), taken.end(), 'x') == taken.end())
+        { if (std::find(taken_player.begin(), taken_player.end(), option) == taken_player.end())
             {
-                return option;
+                if (std::find(taken_computer.begin(), taken_computer.end(), option) == taken_computer.end())
+                    return option;
             }
         }
     }
@@ -273,6 +275,27 @@ void ComputerTurn()
 
 }
 
+bool StillPositions()
+{
+    int positions = 9;
+    bool still_positions = true;
+    for (int i = 0; i < 3; i++)
+    {
+        for (int j = 0; j < 3; j++)
+        {
+            if (matrix[i][j] == 'o' or matrix[i][j] == 'x')
+            {
+                positions--;
+                if (positions == 0)
+                {
+                    still_positions = false;
+                }
+            }
+        }
+    }
+    return still_positions;
+}
+
 bool Won()
 {
     std::vector<std::vector<char> > options = MatrixChanged();
@@ -315,7 +338,13 @@ bool Game()
         Turn();
         ComputerTurn();
         playing = Won();
+        if (StillPositions() == false)
+        {
+            playing = false;
+        }
     }
+    Draw();
+    std::cout << "Game over.";
 }
 
 int main() {
