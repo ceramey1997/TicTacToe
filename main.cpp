@@ -54,9 +54,8 @@ void Draw()
     }
 }
 
-void Turn()
+void Turn(char player)
 {
-    char player = 'x';
     char position;
     std::cout <<  "What position would you like to play?" << std::endl;
     std::cin >> position;
@@ -232,6 +231,11 @@ int WinOpertunities()
     return bestPos;
 }
 
+void BestPosition()
+{
+
+}
+
 void ComputerTurn()
 {
     int position = NeedBlock();
@@ -346,6 +350,7 @@ bool Game()
     Draw();
     std::cout << "Game over.";
 }
+
 
 int main() {
     Game();
