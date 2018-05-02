@@ -1,4 +1,3 @@
-
 class Board():
 
     orig = [[1,2,3],[4,5,6],[7,8,9]]
@@ -76,7 +75,7 @@ class Computer(Player):
         else:
             number = self.win_option()
         if number == 0:
-            number = self.random_move() 
+            number = self.random_move()
         self.change(number, self.character)
 
     def random_move(self):
@@ -164,13 +163,12 @@ class Game(Board):
     def play(self):
         win = 0
         is_draw = False
-        while win == 0:
-            while is_draw == False:    
-                self.draw()
-                self.player.turn()
-                self.computer.make_move()
-                win = self.win()
-                is_draw = self.is_draw()
+        while win == 0 or is_draw == False:
+            win = self.win()
+            is_draw = self.is_draw()
+            self.draw()
+            self.player.turn()
+            self.computer.make_move()
         if win == 1:
             print("good job you won!")
         elif win == 2:
