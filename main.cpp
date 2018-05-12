@@ -41,6 +41,7 @@ std::vector<vector<char> > MatrixChanged()
     std::vector<std::vector<char> > win_option = {win1, win2, win3, win4, win5, win6, win7, win8};
     return win_option;
 }
+
 void Draw()
 {
 
@@ -232,17 +233,74 @@ int WinOpertunities()
     return bestPos;
 }
 
-void BestPosition()
+bool CanWin()
 {
+    std::vector<vector<char> > winPositions = MatrixChanged();
+    for (vector<char> win : winPositions)
+    {
+        int canwin = 0;
+        for (char position : win)
+        {
+            if (position == 'o')
+            {
+                canwin++;
+            }
+            if (canwin == 2)
+            {
+                return true;
+            }
+        }
+    }
+    return false;
+}
 
+char CanWinPosition()
+{
+    char winposition;
+    std::vector<vector<char> > winPositions = MatrixChanged();
+    for (vector<char> win : winPositions)
+    {
+        int canwin = 0;
+        for (char position : win)
+        {
+            if (position == 'o')
+            {
+                canwin++;
+            }
+            else if (canwin == 2)
+            {
+                canwin++;
+            }
+            if (canwin == 3)
+            {
+                return position;
+            }
+        }
+    }
+    char position = '0';
+    return position;
 }
 
 void ComputerTurn()
 {
-    int position = NeedBlock();
+    int position;
+    bool canwin = CanWin();
+    position = NeedBlock();
     if (position == 10)
     {
         position = WinOpertunities();
+    }
+    if (canwin)
+    {
+        position = CanWinPosition();
+        if (position == '0')
+        {
+            position = NeedBlock();
+            if (position == 10)
+            {
+                position = WinOpertunities();
+            }
+        }
     }
     char player = 'o';
     switch(position)
