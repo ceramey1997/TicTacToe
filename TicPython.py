@@ -66,7 +66,8 @@ class Computer(Player):
         else:
             self.player = 'x'
 
-    def make_move(self): 
+    def make_move(self):
+        can_win = self.can_win()
         if self.need_blocked():
             if self.need_blocked() not in (self.character, self.player):
                 number = self.need_blocked()
@@ -76,6 +77,8 @@ class Computer(Player):
             number = self.win_option()
         if number == 0:
             number = self.random_move()
+        if can_win != None:
+            number = self.if_can_win()
         self.change(number, self.character)
 
     def random_move(self):
@@ -96,6 +99,29 @@ class Computer(Player):
                     for win_spot in win_option:   
                         if win_spot != self.player:
                             return win_spot
+    
+    def can_win(self):
+        win_options = self.update_wins()
+        for win_option in win_options:
+            can_win = 0
+            for win_spot in win_option:
+                if win_spot == self.character:
+                    can_win += 1
+                    if can_win == 2:
+                        return win_option
+        return None
+    
+    def can_win_position(self):
+        win_position = self.can_win()
+        for position in win_position:
+            if type(position) == int:
+                return position
+    
+    def if_can_win(self):
+        can_win = self.can_win()
+        if type(can_win) != None:
+            can_win_position = self.can_win_position()
+            return can_win_position
 
     def win_option(self):
         pos_one_wins = 0
@@ -165,14 +191,19 @@ class Game(Board):
         is_draw = False
         while win == 0 or is_draw == False:
             win = self.win()
+            if win == 1:
+                self.draw()
+                print("good job you won!")
+                break
+            elif win == 2:
+                self.draw()
+                print("well... the computer won, better luck next time")
+                break
             is_draw = self.is_draw()
             self.draw()
             self.player.turn()
             self.computer.make_move()
-        if win == 1:
-            print("good job you won!")
-        elif win == 2:
-            print("well... the computer won, better luck next time")
+            
         
 
     def win(self):
